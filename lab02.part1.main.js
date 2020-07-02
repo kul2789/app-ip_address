@@ -33,14 +33,10 @@ function getFirstIpAddress(cidrStr, callback) {
   if (!cidr.isValid()) {
     // If the passed CIDR is invalid, set an error message.
     callbackError = 'Error: Invalid CIDR passed to getFirstIpAddress.';
-    firstIpAddress = { 'ipv4': null , 'ipv6': null} 
   } else {
     // If the passed CIDR is valid, call the object's toArray() method.
     // Notice the destructering assignment syntax to get the value of the first array's element.
-    let ipv4Val = cidr.toArray(options);    
-    // Get IPv4-mapped IPv6 address from a passed IPv4 address.
-    let mappedAddress = getIpv4MappedIpv6Address(ipv4Val[0]);    
-    firstIpAddress = { 'ipv4': ipv4Val[0] , 'ipv6': mappedAddress}    
+    [firstIpAddress] = cidr.toArray(options);
   }
   // Call the passed callback function.
   // Node.js convention is to pass error data as the first argument to a callback.
@@ -77,7 +73,7 @@ function main() {
       if (error) {
         console.error(`  Error returned from GET request: ${error}`);
       }
-      console.log(`  Response returned from GET request: ${JSON.stringify(data)}`);
+      console.log(`  Response returned from GET request: ${data}`);
     });
   }
   // Iterate over sampleIpv4s and pass the element's value to getIpv4MappedIpv6Address().
@@ -92,6 +88,7 @@ function main() {
     }
   }
 }
+
 /**
  * Calculates an IPv4-mapped IPv6 address.
  * @param {string} ipv4 - An IPv4 address in dotted-quad format.
