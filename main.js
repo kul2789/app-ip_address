@@ -23,22 +23,22 @@ const { getIpv4MappedIpv6Address } = require(path.join(__dirname, 'ipv6.js'));
 */
 const IPCIDR = require('ip-cidr');
 
-/**
- * Calculate and return the first host IP address from a CIDR subnet.
- * @param {string} cidrStr - The IPv4 subnet expressed
- *                 in CIDR format.
- * @param {callback} callback - A callback function.
- * @return {string} (firstIpAddress) - An IPv4 address.
- */
 class IpAddress {
-  constructor() {
-    // IAP's global log object is used to output errors, warnings, and other
-    // information to the console, IAP's log files, or a Syslog server.
-    // For more information, consult the Log Class guide on the Itential
-    // Developer Hub https://developer.itential.io/ located
-    // under Documentation -> Developer Guides -> Log Class Guide
-    log.info('Starting the IpAddress product.');
-  }
+    constructor() {
+        // IAP's global log object is used to output errors, warnings, and other
+        // information to the console, IAP's log files, or a Syslog server.
+        // For more information, consult the Log Class guide on the Itential
+        // Developer Hub https://developer.itential.io/ located
+        // under Documentation -> Developer Guides -> Log Class Guide
+        log.info('Starting the IpAddress product.');
+    }
+    /**
+    * Calculate and return the first host ipv4 and ipv6 address from a CIDR subnet.
+    * @param {string} cidrStr - The IPv4 subnet expressed
+    *                 in CIDR format.
+    * @param {callback} callback - A callback function.
+    * @return {object} (firstIpAddress) - An ipv4 and ipv6 address.
+    */
     getFirstIpAddress(cidrStr, callback) {
 
         // Initialize return arguments for callback
@@ -59,14 +59,14 @@ class IpAddress {
         if (!cidr.isValid()) {
             // If the passed CIDR is invalid, set an error message.
             callbackError = 'Error: Invalid CIDR passed to getFirstIpAddress.';
-            firstIpAddress = { 'ipv4': null , 'ipv6': null} 
+            firstIpAddress = { 'ipv4': null, 'ipv6': null }
         } else {
             // If the passed CIDR is valid, call the object's toArray() method.
             // Notice the destructering assignment syntax to get the value of the first array's element.
-            let ipv4Val = cidr.toArray(options);    
+            let ipv4Val = cidr.toArray(options);
             // Get IPv4-mapped IPv6 address from a passed IPv4 address.
-            let mappedAddress = getIpv4MappedIpv6Address(ipv4Val[0]);    
-            firstIpAddress = { 'ipv4': ipv4Val[0] , 'ipv6': mappedAddress}    
+            let mappedAddress = getIpv4MappedIpv6Address(ipv4Val[0]);
+            firstIpAddress = { 'ipv4': ipv4Val[0], 'ipv6': mappedAddress }
         }
         // Call the passed callback function.
         // Node.js convention is to pass error data as the first argument to a callback.
@@ -75,8 +75,5 @@ class IpAddress {
         return callback(firstIpAddress, callbackError);
     }
 
-
 }
-
-
 module.exports = new IpAddress;
